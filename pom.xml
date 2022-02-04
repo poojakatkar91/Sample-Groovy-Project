@@ -33,47 +33,57 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
 
   <build>
     <sourceDirectory>src/main/groovy</sourceDirectory>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.gmaven</groupId>
-        <artifactId>gmaven-plugin</artifactId>
-        <version>1.4</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.9.0</version>
         <configuration>
-          <providerSelection>1.8</providerSelection>
+          <source>1.6</source>
+          <target>1.6</target>
         </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>generateStubs</goal>
-              <goal>compile</goal>
-              <goal>generateTestStubs</goal>
-              <goal>testCompile</goal>
-            </goals>
-          </execution>
-        </executions>
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <goals>-->
+<!--              <goal>generateStubs</goal>-->
+<!--              <goal>compile</goal>-->
+<!--              <goal>generateTestStubs</goal>-->
+<!--              <goal>testCompile</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--        </executions>-->
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.7.5.201505241946</version>
+        <version>0.6.3.201306030806</version>
         <executions>
+          <!-- prepare agent for measuring integration tests -->
           <execution>
+            <id>prepare-integration-tests</id>
+            <phase>pre-integration-test</phase>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
+            <configuration>
+              <destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
+            </configuration>
           </execution>
           <execution>
-            <id>report</id>
-            <phase>test</phase>
+            <id>jacoco-site</id>
+            <phase>post-integration-test</phase>
             <goals>
               <goal>report</goal>
             </goals>
             <configuration>
-              <dataFile>target/jacoco.exec</dataFile>
-              <outputDirectory>target/my-reports</outputDirectory>
+              <dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
             </configuration>
           </execution>
         </executions>
